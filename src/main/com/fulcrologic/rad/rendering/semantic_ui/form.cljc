@@ -20,7 +20,9 @@
     [taoensso.encore :as enc]
     [taoensso.timbre :as log]
     [com.fulcrologic.rad.rendering.semantic-ui.form-options :as sufo]
-    [com.fulcrologic.rad.semantic-ui-options :as suo]))
+    [com.fulcrologic.rad.semantic-ui-options :as suo]
+
+    [se.w3t.flowbite.factories :as f]))
 
 (defn render-to-many [{::form/keys [form-instance] :as env} {k ::attr/qualified-key :as attr} {::form/keys [subforms] :as options}]
   (let [{:semantic-ui/keys [add-position]
@@ -359,8 +361,8 @@
         (log/debug "Form " (comp/component-name form-instance) " valid? " valid?)
         (log/debug "Form " (comp/component-name form-instance) " dirty? " dirty?)))
     (if nested?
-      (div {:className (or (?! (comp/component-options form-instance ::ref-element-class) env) "ui segment")}
-        (div :.ui.form {:classes [(when errors? "error")]
+      (div {:className (or (?! (comp/component-options form-instance ::ref-element-class) env) "")}
+        (dom/form {:classes [(when errors? "error") "flex flex-col gap-4"]
                         :key     (str (comp/get-ident form-instance))}
           (when can-delete?
             (button :.ui.icon.primary.right.floated.button {:disabled (not can-delete?)
@@ -379,7 +381,7 @@
                            (?! (suo/get-rendering-options form-instance suo/layout-class) env)
                            (?! (comp/component-options form-instance suo/layout-class) env)
                            (?! (comp/component-options form-instance ::top-level-class) env)
-                           "ui container")}
+                           "grid gap-6 mb-6 md:grid-cols-2")}
           (when show-header?
             (div {:className (or
                                (?! (suo/get-rendering-options form-instance suo/controls-class) env)

@@ -7,7 +7,12 @@
     [com.fulcrologic.fulcro.dom.inputs :as inputs]
     [taoensso.timbre :as log]
     [com.fulcrologic.rad.type-support.date-time :as datetime]
-    [com.fulcrologic.rad.rendering.semantic-ui.field :refer [render-field-factory]]))
+    [com.fulcrologic.rad.rendering.semantic-ui.field :refer [render-field-factory]]
+    
+    #?(:cljs ["flowbite-datepicker$Datepicker" :as Datepicker])
+    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]))
+
+(def ui-datepicker (interop/react-factory Datepicker))
 
 (def ui-datetime-input
   (comp/factory (inputs/StringBufferedInput ::DateTimeInput

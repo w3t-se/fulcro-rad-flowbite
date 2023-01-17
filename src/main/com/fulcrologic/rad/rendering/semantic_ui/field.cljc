@@ -29,11 +29,11 @@
        (let [top-class (sufo/top-class form-instance attribute)]
          (when visible?
            (div {:key     (str qualified-key)
-                 :classes [(or top-class "ui field") (when invalid? "error")]}
-             (label
+                 :classes [(or top-class "") (when invalid? "error")]}
+             (label {:class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
                (or field-label (some-> qualified-key name str/capitalize))
                (when invalid? (str ent/nbsp "(" validation-message ")")))
-             (div :.ui.input
+             (div :.ui.form ;input {}
                (input-factory (merge addl-props
                                 {:value    value
                                  :onBlur   (fn [v] (form/input-blur! env qualified-key v))
