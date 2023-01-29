@@ -1,0 +1,19 @@
+;; shadow-cljs configuration
+{:source-paths ["src/main"]
+
+ :nrepl    {:port 9000
+            :host "0.0.0.0"} 
+ :socket-repl {:port 8204}
+ :jvm-opts ["-Xmx2G"]
+
+ :builds {:main {:target     :browser
+                 :output-dir "resources/public/js/main"
+                 :watch-dir "resources/public/css"
+                 :http-root "resources/public"
+                 :asset-path "/js/main"
+                                        ;:modules    {:main {:init-fn se.w3t.codo.client/init}}
+                 :release    {:compiler-options {:optimizations :advanced}
+                              :output-dir "target/"
+                                        ;:module-hash-names 8
+                              :build-options {:manifest-name "assets.edn"}}
+                   :devtools   {:preloads   [com.fulcrologic.fulcro.inspect.preload]}}}}

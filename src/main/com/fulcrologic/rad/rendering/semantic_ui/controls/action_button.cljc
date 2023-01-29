@@ -8,7 +8,9 @@
     [com.fulcrologic.rad.control :as control]
     #?(:cljs [com.fulcrologic.fulcro.dom :as dom]
        :clj  [com.fulcrologic.fulcro.dom-server :as dom])
-    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
+    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+
+    [se.w3t.flowbite.factories :as f]))
 
 (defsc ActionButton [_ {:keys [instance control-key]}]
   {:shouldComponentUpdate (fn [_ _ _] true)}
@@ -32,9 +34,10 @@
                                    :onClick   onClick
                                    :disabled? disabled?
                                    :loading?  loading?}))
-            (dom/button
+            (f/ui-button
               (cond-> {:key       (str control-key)
-                       :className (or class "ui tiny primary button")
+                       :className (or class "")
+                       :color "gray"
                        :disabled  (boolean disabled?)
                        :onClick   onClick}
                 htmlStyle (assoc :style htmlStyle))

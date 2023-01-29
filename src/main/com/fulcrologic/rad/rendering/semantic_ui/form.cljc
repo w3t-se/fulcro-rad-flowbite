@@ -66,7 +66,7 @@
                                                            "")]
                                           (comp/fragment {:key (str idx)}
                                             (if (string? add-label)
-                                              (button :.ui.tiny.icon.button
+                                              (f/ui-button
                                                 {:classes [(when (seq add-label) "labeled")]
                                                  :key     (str idx)
                                                  :onClick add-child!}
@@ -76,7 +76,7 @@
                                       possible-types)))))
         ui-factory          (comp/computed-factory ui {:keyfn (fn [item] (-> ui (comp/get-ident item) second str))})
         top-class           (sufo/top-class form-instance attr)
-        body-class          (or top-class "ui container")]
+        body-class          (or top-class "card")]
     (when visible?
       (div {:className body-class :key (str k)}
         (h3 title (span ent/nbsp ent/nbsp) (when (or (nil? add-position) (= :top add-position)) add))
@@ -84,7 +84,7 @@
           (div :.ui.error.message
             validation-message))
         (if (seq items)
-          (div {:className (or (?! ref-container-class env) "ui segments")}
+          (f/ui-card {:className (or (?! ref-container-class env) "")}
             (mapv
               (fn [props]
                 (ui-factory props
@@ -230,7 +230,7 @@
         top-class           (sufo/top-class form-instance attr)
         ui-factory          (comp/computed-factory ui {:keyfn (fn [item] (-> ui (comp/get-ident item) second str))})]
     (when visible?
-      (div {:className (or top-class "ui basic segment")
+      (div {:className (or top-class "card")
             :key       (str k)}
         (dom/h2 :.ui.header title)
         (when (or (nil? add-position) (= :top add-position)) add)
@@ -265,13 +265,13 @@
         (render-ref env attr options))
       (form/render-field env attr))))
 
-(def n-fields-string {1 "one field"
-                      2 "two fields"
-                      3 "three fields"
-                      4 "four fields"
-                      5 "five fields"
-                      6 "six fields"
-                      7 "seven fields"})
+(def n-fields-string {1 "grid-cols-1"
+                      2 "grid-cols-2"
+                      3 "grid-cols-3"
+                      4 "grid-cols-4"
+                      5 "grid-cols-5"
+                      6 "grid-cols-6"
+                      7 "grid-cols-7"})
 
 (def attribute-map (memoize
                      (fn [attributes]
@@ -289,7 +289,7 @@
     (into []
       (map-indexed
         (fn [idx row]
-          (div {:key idx :className (n-fields-string (count row))}
+          (div {:key idx :className (str "grid gap-4 " (n-fields-string (count row)))}
             (mapv (fn [col]
                     (enc/if-let [_    k->attribute
                                  attr (k->attribute col)]
@@ -376,27 +376,29 @@
                              (some? show-header?) (?! show-header? master-form)
                              (some? (fo/show-header? computed-props)) (?! (fo/show-header? computed-props) master-form)
                              :else true)]
-        (div {:key       (str (comp/get-ident form-instance))
-              :className (or
-                           (?! (suo/get-rendering-options form-instance suo/layout-class) env)
-                           (?! (comp/component-options form-instance suo/layout-class) env)
-                           (?! (comp/component-options form-instance ::top-level-class) env)
-                           "grid gap-6 mb-6 md:grid-cols-2")}
-          (when show-header?
+(div {:className "grid grid-col-1 gap-2"}
+        (when show-header?
             (div {:className (or
                                (?! (suo/get-rendering-options form-instance suo/controls-class) env)
                                (?! (comp/component-options form-instance ::controls-class) env)
-                               "ui top attached segment")}
+                               "card")}
               (div {:style {:display        "flex"
                             :justifyContent "space-between"
                             :flexWrap       "wrap"}}
-                (dom/h3 :.ui.header {:style {:wordWrap "break-word" :maxWidth "100%"}}
+                (dom/h1 :.text-2xl.text-black.dark:text-white.font-bold
                   title)
-                (div :.ui.buttons {:style {:textAlign "right" :display "inline" :flexGrow "1"}}
-                  (keep #(control/render-control master-form %) action-buttons)))))
-          (div {:classes [(or (?! (comp/component-options form-instance ::form-class) env) "ui attached form")
-                          (when errors? "error")]}
-            (when invalid?
+                (f/ui-button-group {}
+                     (keep #(control/render-control master-form %) action-buttons)))))
+        (div {:key       (str (comp/get-ident form-instance))
+              :className (or
+                          (?! (suo/get-rendering-options form-instance suo/layout-class) env)
+                          (?! (comp/component-options form-instance suo/layout-class) env)
+                          (?! (comp/component-options form-instance ::top-level-class) env)
+                          "grid gap-6 mb-6")}
+             
+             (div {:classes [(or (?! (comp/component-options form-instance ::form-class) env) "card")
+                             (when errors? "error")]}
+                  (when invalid?
               (div :.ui.error.message (tr "The form has errors and cannot be saved.")))
             (when (seq errors)
               (div :.ui.error.message
@@ -411,8 +413,8 @@
                   (when-not new?
                     (dom/a {:onClick (fn []
                                        (form/undo-via-load! env))} (tr "Reload from server"))))))
-            (div :.ui.attached.segment
-              (render-fields env))))))))
+            (div {:className "card"}
+              (render-fields env)))))))))
 
 (def standard-form-container (comp/factory StandardFormContainer))
 

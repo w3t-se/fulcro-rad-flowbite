@@ -3,8 +3,8 @@
     [clojure.string :as str]
     [com.fulcrologic.fulcro.components :as comp]
     [com.fulcrologic.guardrails.core :refer [>defn =>]]
-    #?(:cljs [com.fulcrologic.fulcro.dom :refer [div label input span]]
-       :clj  [com.fulcrologic.fulcro.dom-server :refer [div label input span]])
+    #?(:cljs [com.fulcrologic.fulcro.dom :as dom :refer [div label input span]]
+       :clj  [com.fulcrologic.fulcro.dom-server :as dom :refer [div label input span]])
     [com.fulcrologic.rad.attributes :as attr]
     [com.fulcrologic.fulcro.dom.html-entities :as ent]
     [com.fulcrologic.rad.options-util :refer [?!]]
@@ -33,7 +33,7 @@
              (label {:class "block mb-2 text-sm font-medium text-gray-900 dark:text-white"}
                (or field-label (some-> qualified-key name str/capitalize))
                (when invalid? (str ent/nbsp "(" validation-message ")")))
-             (div :.ui.form ;input {}
+             (dom/form {}
                (input-factory (merge addl-props
                                 {:value    value
                                  :onBlur   (fn [v] (form/input-blur! env qualified-key v))

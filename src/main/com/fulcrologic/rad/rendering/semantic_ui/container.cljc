@@ -9,18 +9,19 @@
     [com.fulcrologic.rad.control :as control]
     [com.fulcrologic.rad.options-util :refer [?!]]
     [com.fulcrologic.rad.rendering.semantic-ui.form :as sui-form]
-    [taoensso.timbre :as log]))
+    [taoensso.timbre :as log]
+    [se.w3t.flowbite.factories :as f]))
 
 (comp/defsc StandardContainerControls [_ {:keys [instance]}]
   {:shouldComponentUpdate (fn [_ _ _] true)}
   (let [controls (control/component-controls instance)
         {:keys [input-layout action-layout]} (control/standard-control-layout instance)]
-    (div :.ui.top.attached.compact.basic.segment
-      (dom/h3 :.ui.header
+    (dom/div {:class "flex items-center"}
+      (dom/h3 {}
         (or (some-> instance comp/component-options ::container/title (?! instance)) "")
-        (div :.ui.right.floated.buttons
+        (div {:className "flex md:order-2"}
           (keep (fn [k] (control/render-control instance k (get controls k))) action-layout)))
-      (div :.ui.form
+      (dom/form {}
         (map-indexed
           (fn [idx row]
             (div {:key idx :className (sui-form/n-fields-string (count row))}
@@ -63,11 +64,11 @@
         (render-standard-controls container-instance)
         (dom/div :.ui.basic.segment
           (if layout
-            (dom/div :.ui.container.centered.grid
+            (dom/div {:class "card grid align-center"}
               (map-indexed
                 (fn *render-row [idx row]
                   (let [cols (count row)]
-                    (dom/div :.row {:key idx}
+                    (dom/div {:key idx}
                       (map
                         (fn *render-col [entry]
                           (let [id    (if (keyword? entry) entry (:id entry))

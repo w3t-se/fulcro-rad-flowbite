@@ -27,7 +27,8 @@
     [com.fulcrologic.semantic-ui.modules.modal.ui-modal-actions :refer [ui-modal-actions]]
     [com.fulcrologic.fulcro.ui-state-machines :as uism :refer [defstatemachine]]
     [taoensso.encore :as enc]
-    [taoensso.timbre :as log]))
+    [taoensso.timbre :as log]
+    [se.w3t.flowbite.factories :as f]))
 
 (defn- integrate-with-parent-form! [{:keys [state app]} {:keys [parent-registry-key parent-ident parent-relation-attribute ident]}]
   (when (and parent-ident parent-relation-attribute parent-registry-key ident)
@@ -150,15 +151,14 @@
             (let [value (first (filter #(= value (:value %)) options))]
               (:text value))
             (dom/div :.ui.small.menu {:style {:marginTop 0}}
-              (ui-wrapped-dropdown (merge extra-props
-                                     {:style     {:flexGrow 1}
-                                      :className "item"
-                                      :onChange  (fn [v] (onSelect v))
-                                      :compact   true
-                                      :value     value
-                                      :clearable (not required?)
-                                      :disabled  read-only?
-                                      :options   options}))
+                     (f/ui-select (merge extra-props
+                                         {:onChange  (fn [v]
+                                                       (js/console.log (cljs.reader/read-string v.nativeEvent.target.value))
+                                                       (onSelect (cljs.reader/read-string v.nativeEvent.target.value)))
+                                          :required required?
+                                          :disabled  read-only?})
+                                  (for [o options]
+                                    (dom/option {:value (str (:value o))} (:text o))))
               (when mutable?
                 (dom/div :.icon.menu ; .right ?
                   (when open?
@@ -172,13 +172,13 @@
                                     :cancel-params   {:picker-id picker-id}
                                     :id              edit-id}))
                   (when can-create?
-                    (dom/button :.vertically.fitted.ui.icon.button.item
-                                {:onClick (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (tempid/tempid)})]))}
-                                (dom/i :.plus.icon)))
+                    (f/ui-button {:color "gray"
+                                 :onClick (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (tempid/tempid)})]))}
+                                "a"(dom/i :.plus.icon)))
                   (when can-edit?
-                    (dom/button :.vertically.fitted.ui.icon.button.item
-                                {:disabled (not (second value))
-                                 :onClick  (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (some-> value second)})]))}
+                    (f/ui-button {:disabled (not (second value))
+                                  :color "gray"
+                                  :onClick  (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (some-> value second)})]))}
                                 (dom/i :.pencil.icon))))))))))))
 
 (let [ui-to-one-picker (comp/factory ToOnePicker {:keyfn (fn [{:keys [attr]}] (::attr/qualified-key attr))})]
@@ -287,8 +287,7 @@
                                    :cancel-params   {:picker-id picker-id}
                                    :id              edit-id}))
                  (when can-create?
-                   (dom/button :.vertically.fitted.ui.icon.button.item
-                               {:onClick (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (tempid/tempid)})]))}
+                   (f/ui-button {:onClick (fn [] (comp/transact! this [(toggle-modal {:open? true, :picker-id picker-id, :edit-id (tempid/tempid)})]))}
                                (dom/i :.plus.icon))))))))))
 
 (def ui-to-many-picker (comp/factory ToManyPicker {:keyfn :id}))

@@ -24,9 +24,10 @@
     (when visible?
       (div {:className (or top-class "ui field")
             :key       (str k)}
-        (div :.ui.checkbox
+        (div :.flex.items-center.mb-4
           (input (merge
                    {:checked  value
+                    :className "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     :type     "checkbox"
                     :disabled (boolean read-only?)
                     :onChange (fn [evt]
@@ -34,5 +35,17 @@
                                   (form/input-blur! env k v)
                                   (form/input-changed! env k v)))}
                    user-props))
-          (label field-label))))))
+          (label #_{:className "ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"} field-label))))))
 
+(comment
+
+
+<div class="flex items-center mb-4">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default checkbox</label>
+</div>
+<div class="flex items-center">
+    <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
+</div>
+)

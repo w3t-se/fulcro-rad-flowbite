@@ -8,11 +8,7 @@
     [taoensso.timbre :as log]
     [com.fulcrologic.rad.type-support.date-time :as datetime]
     [com.fulcrologic.rad.rendering.semantic-ui.field :refer [render-field-factory]]
-    
-    #?(:cljs ["flowbite-datepicker$Datepicker" :as Datepicker])
-    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]))
-
-(def ui-datepicker (interop/react-factory Datepicker))
+    [com.fulcrologic.rad.rendering.semantic-ui.controls.instant-inputs :as instant-inputs]))
 
 (def ui-datetime-input
   (comp/factory (inputs/StringBufferedInput ::DateTimeInput
@@ -35,5 +31,5 @@
   (render-field-factory {:type "datetime-local"} ui-datetime-input))
 (def render-date-at-noon-field
   "Uses current timezone and gathers a local date but saves it as an instant at noon on that date."
-  (render-field-factory {:type "date"} ui-date-noon-input))
+  instant-inputs/ui-date-instant-input)
 

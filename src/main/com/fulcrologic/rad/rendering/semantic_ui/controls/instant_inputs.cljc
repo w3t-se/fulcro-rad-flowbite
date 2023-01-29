@@ -1,5 +1,6 @@
 (ns com.fulcrologic.rad.rendering.semantic-ui.controls.instant-inputs
   (:require
+   [com.fulcrologic.fulcro.components :as comp]
     [com.fulcrologic.guardrails.core :refer [>defn => ?]]
     [com.fulcrologic.rad.type-support.date-time :as dt]
     [com.fulcrologic.rad.rendering.semantic-ui.controls.control :as control]
@@ -8,20 +9,39 @@
     #?(:clj  [com.fulcrologic.fulcro.dom-server :as dom]
        :cljs [com.fulcrologic.fulcro.dom :as dom])
     [cljc.java-time.local-date-time :as ldt]
-    [cljc.java-time.local-date :as ld]))
+    [cljc.java-time.local-date :as ld]
+    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
+    #?(:cljs ["tailwind-datepicker-react" :default Datepicker])))
+
+(def ui-datepicker (interop/react-factory Datepicker))
+
+(comp/defsc DateInput [this props]
+  {:initLocalState (fn [] {:show? false})}
+  (let [onChange (comp/get-computed this :onChange)]
+  (ui-datepicker (merge props
+                        {:options {:todayBtn true :clearBtn true :language "en"
+                                   
+                                   :theme {}
+                                   :autoHide true}
+                         :show (comp/get-state this :show?)
+                         :setShow (fn [e]
+                                    (comp/set-state! this {:show? (not (:show? (comp/get-state this :show?)))}))
+                         :onChange (fn [e]
+                                     (comp/set-state! this {:show? false})
+                                     (onChange e))}))))
+
+(def ui-date-input (comp/computed-factory DateInput))
 
 (defn ui-date-instant-input [{::keys [default-local-time]} {:keys [value onChange local-time] :as props}]
   (let [value      (if (nil? value) "" (dt/inst->html-date value))
         local-time (or local-time default-local-time)]
-    (dom/input
-      (merge props
-        {:value    value
-         :type     "date"
-         :onChange (fn [evt]
-                     (when onChange
+(ui-date-input props
+               {:onChange (fn [evt]
+                            (when onChange
                        (let [date-string (evt/target-value evt)
                              instant     (dt/html-date->inst date-string local-time)]
-                         (onChange instant))))}))))
+                         (onChange instant))))})
+))
 
 (defn ui-ending-date-instant-input
   "Display the date the user selects, but control a value that is midnight on the next date. Used for generating ending
@@ -34,10 +54,11 @@
                            (ldt/minus-days 1)
                            ldt/to-local-date
                            dt/local-date->html-date-string))]
-    (dom/input
+    (ui-datepicker
       (merge props
         {:value    value
-         :type     "date"
+         :todayBtn true :clearBtn true :language "en"
+         :show true
          :onChange (fn [evt]
                      (when onChange
                        (onChange (some-> (evt/target-value evt)
@@ -48,11 +69,11 @@
 
 (defn ui-date-time-instant-input [_ {:keys [disabled? value onChange] :as props}]
   (let [value (if (nil? value) "" (dt/inst->html-datetime-string value))]
-    (dom/input
+    (ui-datepicker
       (merge props
         (cond->
           {:value    value
-           :type     "date"
+           :todayBtn true :clearBtn true :language "en"
            :onChange (fn [evt]
                        (when onChange
                          (let [date-time-string (evt/target-value evt)
