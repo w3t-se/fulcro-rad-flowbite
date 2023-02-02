@@ -13,7 +13,9 @@
     [com.fulcrologic.rad.attributes :as attr]
     [com.fulcrologic.rad.rendering.semantic-ui.form-options :as sufo]
     [clojure.string :as str]
-    [com.fulcrologic.rad.form :as form]))
+    [com.fulcrologic.rad.form :as form]
+
+    [se.w3t.flowbite.factories :as f]))
 
 (defn enumerated-options [{::form/keys [form-instance] :as env} {::attr/keys [qualified-key] :as attribute}]
   (let [{::attr/keys [enumerated-values]} attribute
@@ -64,18 +66,22 @@
           value      (get props qualified-key)]
       (div {:className (or top-class "ui field")
             :key       (str qualified-key) :classes [(when invalid? "error")]}
-        (label (str (form/field-label env attribute)
-                 (when invalid? (str " (" (tr "Required") ")"))))
+        (label {:class "text-gray-900 text-sm py-3 dark:text-white"} (str (form/field-label env attribute)
+                      (when invalid? (str " (" (tr "Required") ")"))))
         (if read-only?
           (let [value (first (filter #(= value (:value %)) options))]
             (dom/input {:readOnly "readonly"
                         :value    (:text value)}))
-          (ui-wrapped-dropdown (merge
-                                 {:options   options
-                                  :clearable (not required?)
-                                  :value     value
-                                  :onChange  (fn [v] (form/input-changed! env qualified-key v))}
-                                 user-props)))))))
+          (f/ui-select (merge
+                        {:options   options
+                         :required required?
+                         :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        ;:value     value
+                         :onChange  (fn [v] (let [v (cljs.reader/read-string v.nativeEvent.target.value)]
+                                              (form/input-changed! env qualified-key v)))}
+                        user-props)
+                       (for [o options]
+                         (dom/option {:value (str (:value o))} (:text o)))))))))
 
 (defn render-field [env {::attr/keys [cardinality] :or {cardinality :one} :as attribute}]
   (if (= :many cardinality)

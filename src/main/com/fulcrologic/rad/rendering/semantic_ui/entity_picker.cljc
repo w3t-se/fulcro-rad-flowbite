@@ -153,7 +153,7 @@
             (dom/div :.ui.small.menu {:style {:marginTop 0}}
                      (f/ui-select (merge extra-props
                                          {:onChange  (fn [v]
-                                                       (js/console.log (cljs.reader/read-string v.nativeEvent.target.value))
+                                                       #_(js/console.log (cljs.reader/read-string v.nativeEvent.target.value))
                                                        (onSelect (cljs.reader/read-string v.nativeEvent.target.value)))
                                           :required required?
                                           :disabled  read-only?})

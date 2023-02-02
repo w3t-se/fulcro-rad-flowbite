@@ -36,8 +36,14 @@
                                    :loading?  loading?}))
             (f/ui-button
               (cond-> {:key       (str control-key)
-                       :className (or class "")
-                       :color "gray"
+                       :className (or class "mx-1")
+                       :color (condp #(and (not (boolean disabled?))
+                                           (= %2 %1)) label
+                                  "Done" "gray"
+                                  "Undo" "warning"
+                                  "Save" "success"
+                                  "Cancel" "failure"
+                                  "gray")
                        :disabled  (boolean disabled?)
                        :onClick   onClick}
                 htmlStyle (assoc :style htmlStyle))

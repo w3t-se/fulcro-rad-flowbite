@@ -24,24 +24,27 @@
                                    :theme {}
                                    :autoHide true}
                          :show (comp/get-state this :show?)
+                         ;:value 
                          :setShow (fn [e]
                                     (comp/set-state! this {:show? (not (:show? (comp/get-state this :show?)))}))
                          :onChange (fn [e]
-                                     (comp/set-state! this {:show? false})
                                      (onChange e))}))))
 
 (def ui-date-input (comp/computed-factory DateInput))
 
 (defn ui-date-instant-input [{::keys [default-local-time]} {:keys [value onChange local-time] :as props}]
   (let [value      (if (nil? value) "" (dt/inst->html-date value))
-        local-time (or local-time default-local-time)]
-(ui-date-input props
-               {:onChange (fn [evt]
-                            (when onChange
-                       (let [date-string (evt/target-value evt)
-                             instant     (dt/html-date->inst date-string local-time)]
-                         (onChange instant))))})
-))
+        local-time (or local-time default-local-time)
+        a (js/console.log props)]
+    (ui-date-input props
+                   {:onChange (fn [evt]
+                                (let [date-string (str evt)
+                                        ;instant     (dt/html-date->inst date-string local-time)
+                                      ]
+                                  (js/console.log props)
+                              ;(onChange instant)
+                                  ))})
+    ))
 
 (defn ui-ending-date-instant-input
   "Display the date the user selects, but control a value that is midnight on the next date. Used for generating ending
@@ -60,6 +63,7 @@
          :todayBtn true :clearBtn true :language "en"
          :show true
          :onChange (fn [evt]
+                     (js/console.log value)
                      (when onChange
                        (onChange (some-> (evt/target-value evt)
                                          (dt/html-date-string->local-date)
@@ -95,6 +99,6 @@
 
 (defn date-at-noon-control [render-env]
   (control/ui-control (assoc render-env
-                        ::default-local-time lt/noon
-                        :input-factory ui-date-instant-input)))
+                             ::default-local-time lt/noon
+                             :input-factory ui-date-instant-input)))
 
