@@ -3,4 +3,5 @@
          com.fulcrologic/semantic-ui-wrapper {:mvn/version "2.1.4"}
          org.clojure/clojure                 {:mvn/version "1.11.1" :scope "provided"}
          org.clojure/clojurescript           {:mvn/version "1.11.60" :scope "provided"}
-         flowbite-ui-wrapper/flowbite-ui-wrapper {:local/root "../flowbite-ui-wrapper"}}}
+         io.github.w3t-se/flowbite-ui-wrapper {:git/url "git@github.com:w3t-se/fulcro3-flowbite-ui-wrapper.git"
+                                               :git/sha "cf2cc1600058bfd7f6d8a20d8a448a75aa7ab1c2"}}}
