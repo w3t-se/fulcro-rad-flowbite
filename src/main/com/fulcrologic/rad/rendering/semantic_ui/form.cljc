@@ -84,7 +84,7 @@
           (div :.ui.error.message
             validation-message))
         (if (seq items)
-          (f/ui-card {:className (or (?! ref-container-class env) "")}
+          (div {:className (or (?! ref-container-class env) "")}
             (mapv
               (fn [props]
                 (ui-factory props
@@ -335,7 +335,7 @@
                :onClick #(comp/set-state! this {:current-tab idx})
                :classes [(when (= current-tab idx) "active")]}
               title)) tab-labels))
-      (div :.ui.segment
+      (div {:class "rounded-xl"}
         (render-layout* env options k->attr active-layout)))))
 
 (def ui-tabbed-layout (comp/computed-factory TabbedLayout))
@@ -376,7 +376,7 @@
                              (some? show-header?) (?! show-header? master-form)
                              (some? (fo/show-header? computed-props)) (?! (fo/show-header? computed-props) master-form)
                              :else true)]
-(div {:className "grid grid-col-1 gap-2"}
+        (div {:className "grid grid-col-1 gap-2"}
         (when show-header?
             (div {:className (or
                                (?! (suo/get-rendering-options form-instance suo/controls-class) env)

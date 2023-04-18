@@ -38,21 +38,17 @@
       (div {:className (or top-class "ui field")
             :key       (str qualified-key)}
         (label (form/field-label env attribute))
-        (div :.ui.middle.aligned.celled.list.big {:style {:marginTop "0"}}
+        (div {:class "flex flex-col gap-2 mt-2"}
           (map (fn [{:keys [text value]}]
                  (let [checked? (contains? selected-ids value)]
-                   (div :.item {:key value}
-                     (div :.content {}
-                       (div :.ui.toggle.checkbox {:style {:marginTop "0"}}
-                         (dom/input
-                           {:type     "checkbox"
-                            :checked  checked?
-                            :disabled read-only?
-                            :onChange #(let [selection (if-not checked?
-                                                         (conj (set (or selected-ids #{})) value)
-                                                         (disj selected-ids value))]
-                                         (form/input-changed! env qualified-key selection))})
-                         (dom/label text))))))
+                   (f/ui-toggle-switch
+                    {:checked  checked?
+                     :disabled read-only?
+                     :onChange #(let [selection (if-not checked?
+                                                  (conj (set (or selected-ids #{})) value)
+                                                  (disj selected-ids value))]
+                                  (form/input-changed! env qualified-key selection))
+                     :label text})))
             options))))))
 
 (defn- render-to-one [{::form/keys [form-instance] :as env} {::attr/keys [qualified-key computed-options required?] :as attribute}]
@@ -75,7 +71,7 @@
           (f/ui-select (merge
                         {:options   options
                          :required required?
-                         :class "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         :class "border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         ;:value     value
                          :onChange  (fn [v] (let [v (cljs.reader/read-string v.nativeEvent.target.value)]
                                               (form/input-changed! env qualified-key v)))}

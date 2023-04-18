@@ -60,11 +60,11 @@
                             (let [factory (comp/computed-factory cls)
                                   props   (get container-props id {})]
                               (factory props {::container/controlled? true})))]
-      (dom/div :.ui.basic.segments
+      (dom/div {:class "rounded-xl"}
         (render-standard-controls container-instance)
-        (dom/div :.ui.basic.segment
+        (dom/div {:class "rounded-xl"}
           (if layout
-            (dom/div {:class "card grid align-center"}
+            (dom/div {:class "grid align-center"}
               (map-indexed
                 (fn *render-row [idx row]
                   (let [cols (count row)]

@@ -265,14 +265,11 @@
                      (let [checked? (contains? current-selection value)]
                        (div :.item {:key value}
                          (div :.content {}
-                           (div :.ui.toggle.checkbox {:style {:marginTop "0"}}
-                             (dom/input
-                               (merge extra-props
-                                 {:type     "checkbox"
-                                  :checked  checked?
-                                  :onChange #(if-not checked?
-                                               (form/input-changed! env qualified-key (vec (conj current-selection value)))
-                                               (form/input-changed! env qualified-key (vec (disj current-selection value))))}))
+                              (f/ui-toggle-switch (merge extra-props
+                                                         {:checked  checked?
+                                                          :onChange #(if-not checked?
+                                                                       (form/input-changed! env qualified-key (vec (conj current-selection value)))
+                                                                       (form/input-changed! env qualified-key (vec (disj current-selection value))))})
                              (dom/label text))))))
                 options))
                (dom/div :.icon.menu ; .right ?
