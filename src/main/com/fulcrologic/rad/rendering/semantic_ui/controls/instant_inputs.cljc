@@ -23,7 +23,7 @@
                                    
                                    :theme {}
                                    :autoHide true}
-                         :show (comp/get-state this :show?)
+                         :show #(comp/get-state this :show?)
                          ;:value 
                          :setShow (fn [e]
                                     (comp/set-state! this {:show? (not (:show? (comp/get-state this :show?)))}))
@@ -37,13 +37,17 @@
         local-time (or local-time default-local-time)
         a (js/console.log props)]
     (ui-date-input props
-                   {:onChange (fn [evt]
-                                (let [date-string (str evt)
-                                        ;instant     (dt/html-date->inst date-string local-time)
-                                      ]
-                                  (js/console.log props)
-                              ;(onChange instant)
-                                  ))})
+                   {:onChange (fn [evt] (println local-time)#_(onChange evt)
+                                #_(onChange evt #_(some-> evt
+                                                          (dt/inst->local-date)
+                                                          (dt/local-date->html-date-string)))) #_(fn [evt]
+                                                                                                   (let [date-string (str evt)
+                                                   instant     (dt/html-date->inst date-string local-time)
+                                                   ]
+                                               (println "p: " props)
+                                        ;(onChange instant)
+                                               ))}
+                   (dom/input {:type "text" :value value}))
     ))
 
 (defn ui-ending-date-instant-input
@@ -63,7 +67,6 @@
          :todayBtn true :clearBtn true :language "en"
          :show true
          :onChange (fn [evt]
-                     (js/console.log value)
                      (when onChange
                        (onChange (some-> (evt/target-value evt)
                                          (dt/html-date-string->local-date)
