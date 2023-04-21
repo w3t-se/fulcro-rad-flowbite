@@ -35,6 +35,6 @@
                (when invalid? (str ent/nbsp "(" validation-message ")")))
              (dom/form {}
                (input-factory (merge addl-props
-                                {:value    value
-                                 :onBlur   (fn [v] (form/input-blur! env qualified-key v))
-                                 :onChange (fn [v] (form/input-changed! env qualified-key v))}))))))))))
+                                     {:value    value
+                                      :onBlur   (fn [v] (form/input-blur! env qualified-key v))
+                                      :onChange (fn [v] (form/input-changed! env qualified-key v))}))))))))))

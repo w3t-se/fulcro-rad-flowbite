@@ -31,5 +31,5 @@
   (render-field-factory {:type "datetime-local"} ui-datetime-input))
 (def render-date-at-noon-field
   "Uses current timezone and gathers a local date but saves it as an instant at noon on that date."
-  instant-inputs/ui-date-instant-input)
+  (render-field-factory instant-inputs/ui-date-instant-input))
 
