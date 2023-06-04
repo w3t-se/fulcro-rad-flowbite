@@ -5,4 +5,4 @@
          org.clojure/clojurescript           {:mvn/version "1.11.60" :scope "provided"}
          se.w3t/flowbite-ui-wrapper {;;:local/root "../flowbite-ui-wrapper"
                                      :git/url "https://github.com/w3t-se/fulcro3-flowbite-ui-wrapper.git"
-                                     :git/sha "ea6de9d4a8ec6277465bb0153a9b8479deea5e9a"}}}
+                                     :sha "ea6de9d4a8ec6277465bb0153a9b8479deea5e9a"}}}
