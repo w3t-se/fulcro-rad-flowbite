@@ -371,6 +371,7 @@
           (render-fields env)))
       (let [{::form/keys [title action-buttons controls show-header?]} (comp/component-options form-instance)
             title          (?! title form-instance props)
+            bla            (println "ac:" action-buttons)
             action-buttons (if action-buttons action-buttons form/standard-action-buttons)
             show-header?   (cond
                              (some? show-header?) (?! show-header? master-form)
@@ -387,8 +388,9 @@
                             :flexWrap       "wrap"}}
                 (dom/h1 :.text-2xl.text-black.dark:text-white.font-bold
                   title)
-                (f/ui-button-group {}
-                     (keep #(control/render-control master-form %) action-buttons)))))
+                (comp/with-parent-context this
+                  (f/ui-button-group {}
+                    (keep #(control/render-control master-form %) action-buttons))))))
         (div {:key       (str (comp/get-ident form-instance))
               :className (or
                           (?! (suo/get-rendering-options form-instance suo/layout-class) env)
