@@ -373,6 +373,7 @@
             title          (?! title form-instance props)
             bla            (println "ac:" action-buttons)
             action-buttons (if action-buttons action-buttons form/standard-action-buttons)
+            dla            (println "ac2:" action-buttons)
             show-header?   (cond
                              (some? show-header?) (?! show-header? master-form)
                              (some? (fo/show-header? computed-props)) (?! (fo/show-header? computed-props) master-form)
@@ -388,9 +389,8 @@
                             :flexWrap       "wrap"}}
                 (dom/h1 :.text-2xl.text-black.dark:text-white.font-bold
                   title)
-                (comp/with-parent-context this
-                  (f/ui-button-group {}
-                    (keep #(control/render-control master-form %) action-buttons))))))
+                (dom/div :.flex.flex-row.justify-between
+                  (keep #(control/render-control master-form %) action-buttons)))))
         (div {:key       (str (comp/get-ident form-instance))
               :className (or
                           (?! (suo/get-rendering-options form-instance suo/layout-class) env)
