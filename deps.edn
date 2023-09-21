@@ -1,8 +1,9 @@
 {:paths ["src/main"]
- :deps  {com.fulcrologic/fulcro-rad          {:mvn/version "1.4.6"}
+ :deps  {com.fulcrologic/fulcro-rad          {:mvn/version "1.5.6"}
          com.fulcrologic/semantic-ui-wrapper {:mvn/version "2.1.4"}
          org.clojure/clojure                 {:mvn/version "1.11.1" :scope "provided"}
-         org.clojure/clojurescript           {:mvn/version "1.11.60" :scope "provided"}
-         se.w3t/flowbite-ui-wrapper {;;:local/root "../flowbite-ui-wrapper"
+         org.clojure/clojurescript           {:mvn/version "1.11.121" :scope "provided"}
+         se.w3t/flowbite-ui-wrapper {;:local/root "../flowbite-ui-wrapper"
                                      :git/url "https://github.com/w3t-se/fulcro3-flowbite-ui-wrapper.git"
-                                     :sha "ea6de9d4a8ec6277465bb0153a9b8479deea5e9a"}}}
+                                     :sha " cdb5016770ec82ac48c667df98766c66d5593892"
+                                     }}}
